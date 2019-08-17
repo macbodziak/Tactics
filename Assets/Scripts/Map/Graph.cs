@@ -20,7 +20,12 @@ public class Graph
         {
             for(int y = 0; y < height; y++)
             {
-                nodes[x, y] = new Node();
+                NodeObject tempGo = GameObject.Instantiate(Resources.Load("Prefabs/Tile", typeof(NodeObject))) as NodeObject;
+                Vector3 pos = new Vector3(x, 0f, y);
+                tempGo.transform.position = pos;
+                tempGo.name = "Tile " + x + "," + y;
+                nodes[x, y] = new Node(tempGo);
+                tempGo.Init(nodes[x,y]);
             }
         }
     }
@@ -86,10 +91,6 @@ public class Graph
             int h = int.Parse(words[1]);
             Graph graph = new Graph(w, h);
 
-            foreach (string word in words)
-            {
-                Debug.Log(word);
-            }
             return null;
         }
         else

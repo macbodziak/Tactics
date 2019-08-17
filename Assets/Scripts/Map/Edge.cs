@@ -2,12 +2,30 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct Edge {
-    Node node;
-    int cost;
+public struct Edge
+{
+    Node myNode;
+    int myCost;
 
-    public Edge(Node otherNode, int cost) {
-        node = otherNode;
-        this.cost = cost;
+    public Edge(Node otherNode, int cost)
+    {
+        myNode = otherNode;
+        myCost = cost;
+    }
+
+    public Node node
+    {
+        get
+        {
+            return myNode;
+        }
+    }
+
+    public int cost
+    {
+        get
+        {
+            return myCost;
+        }
     }
 }
