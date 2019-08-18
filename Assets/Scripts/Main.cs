@@ -7,7 +7,7 @@ public class Main : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Graph.CreateNewGraph(15, 15);
+        // Graph.CreateNewGraph(15, 15);
         // Graph.LoadGraphFromFile("map01.txt");
     }
 
@@ -22,7 +22,7 @@ public class Main : MonoBehaviour
             {
                 if (hit.transform != null)
                 {
-                    NodeObject no = hit.transform.GetComponent<NodeObject>();
+                    Node no = hit.transform.GetComponent<Node>();
                     if(no != null)
                     {
                         Debug.Log("drawing edges of " + no.name);

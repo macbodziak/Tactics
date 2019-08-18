@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public struct Edge
+public class Edge 
 {
     Node myNode;
     int myCost;
 
-    public Edge(Node otherNode, int cost)
+    public  Edge(Node otherNode, int cost)
     {
         myNode = otherNode;
         myCost = cost;
