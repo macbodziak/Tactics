@@ -7,7 +7,7 @@ public class Graph : MonoBehaviour, ISerializationCallbackReceiver
 {
     public int width;
     public int height;
-    
+
     public bool isEmpty = false;
     Node[,] nodes;
 
@@ -36,7 +36,7 @@ public class Graph : MonoBehaviour, ISerializationCallbackReceiver
         {
             for (int y = 0; y < height; y++)
             {
-                Node no = GameObject.Instantiate(Resources.Load("Prefabs/Tile", typeof(Node))) as Node;
+                Node no = GameObject.Instantiate(Resources.Load("Prefabs/Tile", typeof(Node)), transform) as Node;
                 Vector3 pos = new Vector3(x, 0f, y);
                 no.transform.position = pos;
                 no.name = "Tile " + x + "," + y;
@@ -61,25 +61,93 @@ public class Graph : MonoBehaviour, ISerializationCallbackReceiver
     void SetUpNeighboursPerNode(Vector2Int location)
     {
         Node currentNode = nodes[location.x, location.y];
-        int x;
-        int y;
-        // string debugString = "[" + location.x + ", " + location.y + "] : ";
+        if (currentNode.walkable == false)
+        {
+            return;
+        }
+        //---
+        // int x;
+        // int y;
+        //--
         for (int i = 0; i < 8; i++)
         {
-            x = Dir[i].x + location.x;
-            y = Dir[i].y + location.y;
+            CheckWalkability(location, i);
+            // x = Dir[i].x + location.x;
+            // y = Dir[i].y + location.y;
 
-            if (IsInGraphRange(x, y))
-            {
-                // Debug.Log(x + " ," + y);
-                // currentNode.edges.Add(new Edge(nodes[x, y], DirCost[i]));
-                currentNode.AddEdge(nodes[x, y], DirCost[i]);
-                // debugString += "(" + x + "," + y + ") - " + DirCost[i] + " ";
-            }
+            // if (IsInGraphRange(x, y))
+            // {
+            //     if (nodes[x, y].walkable)
+            //     {
+            //         currentNode.AddEdge(nodes[x, y], DirCost[i]);
+            //     }
+            // }
         }
-        // Debug.Log(debugString);
+        //--
     }
 
+    bool CheckWalkability(Vector2Int location, int DirIndex)
+    {
+        Node currentNode = nodes[location.x, location.y];
+
+        int x = Dir[DirIndex].x + location.x;
+        int y = Dir[DirIndex].y + location.y;
+        int prevX = 0;
+        int prevY = 0;
+        int nextX = 0;
+        int nextY = 0;
+
+        bool diagonal = true;
+
+        switch (DirIndex)
+        {
+            case 1:
+                prevX = Dir[0].x + location.x;
+                prevY = Dir[0].y + location.y;
+                nextX = Dir[2].x + location.x;
+                nextY = Dir[2].y + location.y;
+                break;
+            case 3:
+                prevX = Dir[2].x + location.x;
+                prevY = Dir[2].y + location.y;
+                nextX = Dir[4].x + location.x;
+                nextY = Dir[4].y + location.y;
+                break;
+            case 5:
+                prevX = Dir[4].x + location.x;
+                prevY = Dir[4].y + location.y;
+                nextX = Dir[6].x + location.x;
+                nextY = Dir[6].y + location.y;
+                break;
+            case 7:
+                prevX = Dir[6].x + location.x;
+                prevY = Dir[6].y + location.y;
+                nextX = Dir[0].x + location.x;
+                nextY = Dir[0].y + location.y;
+                break;
+            default:
+                diagonal = false;
+                break;
+        }
+
+        if (IsInGraphRange(x, y))
+        {
+            if (diagonal)
+            {
+                if(nodes[x, y].walkable && nodes[prevX, prevY].walkable && nodes[nextX, nextY].walkable)
+                {
+                    currentNode.AddEdge(nodes[x, y], DirCost[DirIndex]);
+                    return true;
+                }
+            }
+            else if (nodes[x, y].walkable)
+            {
+                currentNode.AddEdge(nodes[x, y], DirCost[DirIndex]);
+                return true;
+            }
+        }
+        return false;
+    }
     bool IsInGraphRange(int x, int y)
     {
         if (x < 0 || x >= width || y < 0 || y >= height)
@@ -116,11 +184,23 @@ public class Graph : MonoBehaviour, ISerializationCallbackReceiver
     public void DeleteGraph()
     {
         isEmpty = true;
-        for(int i = 0; i < serializedNodes.Count; i++)
+        for (int i = 0; i < serializedNodes.Count; i++)
         {
             DestroyImmediate(serializedNodes[i].gameObject);
         }
         serializedNodes.Clear();
+    }
+
+    public void Rebake()
+    {
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                nodes[x, y].ClearEdges();
+                SetUpNeighboursPerNode(new Vector2Int(x, y));
+            }
+        }
     }
     // static public Graph LoadGraphFromFile(string Filename)
     // {

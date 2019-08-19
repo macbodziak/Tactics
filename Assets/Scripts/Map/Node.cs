@@ -7,7 +7,7 @@ public class Node : MonoBehaviour, ISerializationCallbackReceiver
     [SerializeField]
     bool myWalkable = true;
     //other things
-    public List<Edge> edges = new List<Edge>();
+    List<Edge> edges = new List<Edge>();
 
     public List<Node> _nodes = new List<Node>();
     public List<int> _costs = new List<int>();
@@ -56,6 +56,11 @@ public class Node : MonoBehaviour, ISerializationCallbackReceiver
     public void AddEdge(Node inNode, int inCost)
     {
         edges.Add(new Edge(inNode, inCost));
+    }
+
+    public void ClearEdges()
+    {
+        edges.Clear();
     }
     public void DrawDebugEdges()
     {

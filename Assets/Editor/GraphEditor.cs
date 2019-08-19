@@ -42,7 +42,9 @@ public class GraphEditor : Editor
         GUI.enabled = !myGraph.isEmpty;
         if (GUILayout.Button("Rebake Graph Button"))
         {
-            Debug.Log("Rebake Graph Button Pressed - not yet implemented");
+            myGraph.Rebake();
+            EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
+            Debug.Log("Rebaking Graph");
         }
         if (GUILayout.Button("Placeholder Button"))
         {
