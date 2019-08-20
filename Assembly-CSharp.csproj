@@ -59,6 +59,8 @@
      <Compile Include="Assets\Scripts\Map\Edge.cs" />
      <Compile Include="Assets\Scripts\Map\Graph.cs" />
      <Compile Include="Assets\Scripts\Map\Node.cs" />
+     <Compile Include="Assets\Scripts\Map\Pathfinder.cs" />
+     <Compile Include="Assets\Scripts\Map\PriorityQueue.cs" />
      <None Include="Assets\Resources\map01.txt.txt" />
  <Reference Include="Unity.Timeline.Editor">
  <HintPath>F:/Unity/Tactics 01/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>

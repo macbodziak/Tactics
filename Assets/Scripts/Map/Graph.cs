@@ -7,25 +7,12 @@ public class Graph : MonoBehaviour, ISerializationCallbackReceiver
 {
     public int width;
     public int height;
-
     public bool isEmpty = false;
     Node[,] nodes;
-
     [SerializeField] List<Node> serializedNodes;
+
     static Vector2Int[] Dir = { Vector2Int.down, new Vector2Int(1, -1), Vector2Int.right, new Vector2Int(1, 1), Vector2Int.up, new Vector2Int(-1, 1), Vector2Int.left, new Vector2Int(-1, -1) };
     static int[] DirCost = { 10, 14, 10, 14, 10, 14, 10, 14 };
-
-    // void Start()
-    // {
-    //     Debug.Log("Graph Start");
-    //     for (int x = 0; x < width; x++)
-    //     {
-    //         for (int y = 0; y < height; y++)
-    //         {
-    //             SetUpNeighboursPerNode(new Vector2Int(x, y));
-    //         }
-    //     }
-    // }
 
     public void InitGraph(int width, int height)
     {
@@ -65,28 +52,15 @@ public class Graph : MonoBehaviour, ISerializationCallbackReceiver
         {
             return;
         }
-        //---
-        // int x;
-        // int y;
-        //--
+
         for (int i = 0; i < 8; i++)
         {
-            CheckWalkability(location, i);
-            // x = Dir[i].x + location.x;
-            // y = Dir[i].y + location.y;
+            SetUpEdgePerDirection(location, i);
 
-            // if (IsInGraphRange(x, y))
-            // {
-            //     if (nodes[x, y].walkable)
-            //     {
-            //         currentNode.AddEdge(nodes[x, y], DirCost[i]);
-            //     }
-            // }
         }
-        //--
     }
 
-    bool CheckWalkability(Vector2Int location, int DirIndex)
+    bool SetUpEdgePerDirection(Vector2Int location, int DirIndex)
     {
         Node currentNode = nodes[location.x, location.y];
 
@@ -134,7 +108,7 @@ public class Graph : MonoBehaviour, ISerializationCallbackReceiver
         {
             if (diagonal)
             {
-                if(nodes[x, y].walkable && nodes[prevX, prevY].walkable && nodes[nextX, nextY].walkable)
+                if (nodes[x, y].walkable && nodes[prevX, prevY].walkable && nodes[nextX, nextY].walkable)
                 {
                     currentNode.AddEdge(nodes[x, y], DirCost[DirIndex]);
                     return true;

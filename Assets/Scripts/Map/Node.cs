@@ -7,12 +7,12 @@ public class Node : MonoBehaviour, ISerializationCallbackReceiver
     [SerializeField]
     bool myWalkable = true;
     //other things
-    List<Edge> edges = new List<Edge>();
+    public List<Edge> edges = new List<Edge>();
 
+    //used for serialization for the editor
     public List<Node> _nodes = new List<Node>();
+    //used for serialization for the editor
     public List<int> _costs = new List<int>();
-
-    // public Dictionary<Node, int> edges2 = new  Dictionary<Node, int>();
 
     public void OnBeforeSerialize()
     {

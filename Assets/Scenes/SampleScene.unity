@@ -721,11 +721,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myWalkable: 1
   _nodes:
-  - {fileID: 742549474}
-  - {fileID: 1966184346}
   - {fileID: 1792262597}
-  - {fileID: 1736616445}
-  _costs: 0a0000000e0000000a0000000a000000
+  _costs: 0a000000
 --- !u!64 &171357551
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -834,14 +831,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myWalkable: 1
   _nodes:
-  - {fileID: 1736616445}
   - {fileID: 1185973873}
   - {fileID: 973457949}
   - {fileID: 1453879161}
   - {fileID: 1346161655}
   - {fileID: 382434644}
-  - {fileID: 1066032313}
-  _costs: 0a0000000a0000000e0000000a0000000e0000000a0000000e000000
+  _costs: 0a0000000e0000000a0000000e0000000a000000
 --- !u!64 &178381112
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -1846,13 +1841,12 @@ MonoBehaviour:
   myWalkable: 1
   _nodes:
   - {fileID: 1066032313}
-  - {fileID: 1736616445}
   - {fileID: 178381111}
   - {fileID: 1453879161}
   - {fileID: 1346161655}
   - {fileID: 1083222893}
   - {fileID: 194773621}
-  _costs: 0a0000000e0000000a0000000e0000000a0000000e0000000a000000
+  _costs: 0a0000000a0000000e0000000a0000000e0000000a000000
 --- !u!64 &382434645
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -2905,7 +2899,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 4e-45}
+  m_BoundingSphereOverride: {x: 0, y: 0.1484375, z: 0.03125, w: -0.0390625}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -3064,14 +3058,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e133afc488bc82429081b6b0b740640, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myWalkable: 1
-  _nodes:
-  - {fileID: 1178684554}
-  - {fileID: 993911434}
-  - {fileID: 1966184346}
-  - {fileID: 1792262597}
-  - {fileID: 171357550}
-  _costs: 0a0000000e0000000a0000000e0000000a000000
+  myWalkable: 0
+  _nodes: []
+  _costs: 
 --- !u!64 &742549475
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -3103,7 +3092,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dd725ef70f717049804b219dc15659d, type: 2}
+  - {fileID: 2100000, guid: 8795bfdbbea94f747ad89dd2eca23038, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -4146,6 +4135,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 473865ce5c33bd14ab5ef47f01a34565, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  graph: {fileID: 1660230617}
+  start: {fileID: 1003105295}
+  goal: {fileID: 171357550}
+  range: 40
 --- !u!1 &971716757
 GameObject:
   m_ObjectHideFlags: 0
@@ -4516,9 +4509,8 @@ MonoBehaviour:
   _nodes:
   - {fileID: 270647859}
   - {fileID: 1966184346}
-  - {fileID: 742549474}
   - {fileID: 1178684554}
-  _costs: 0a0000000a0000000e0000000a000000
+  _costs: 0a0000000a0000000a000000
 --- !u!64 &993911435
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -5078,10 +5070,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myWalkable: 1
   _nodes:
-  - {fileID: 1736616445}
-  - {fileID: 178381111}
   - {fileID: 382434644}
-  _costs: 0a0000000e0000000a000000
+  _costs: 0a000000
 --- !u!64 &1066032314
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -5762,10 +5752,8 @@ MonoBehaviour:
   myWalkable: 1
   _nodes:
   - {fileID: 993911434}
-  - {fileID: 1966184346}
-  - {fileID: 742549474}
   - {fileID: 2051331381}
-  _costs: 0a0000000e0000000a0000000a000000
+  _costs: 0a0000000a000000
 --- !u!64 &1178684555
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -9597,13 +9585,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1e133afc488bc82429081b6b0b740640, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  myWalkable: 1
-  _nodes:
-  - {fileID: 171357550}
-  - {fileID: 178381111}
-  - {fileID: 382434644}
-  - {fileID: 1066032313}
-  _costs: 0a0000000a0000000e0000000a000000
+  myWalkable: 0
+  _nodes: []
+  _costs: 
 --- !u!64 &1736616446
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -9635,7 +9619,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dd725ef70f717049804b219dc15659d, type: 2}
+  - {fileID: 2100000, guid: 8795bfdbbea94f747ad89dd2eca23038, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -10156,8 +10140,7 @@ MonoBehaviour:
   _nodes:
   - {fileID: 1966184346}
   - {fileID: 171357550}
-  - {fileID: 742549474}
-  _costs: 0a0000000a0000000e000000
+  _costs: 0a0000000a000000
 --- !u!64 &1792262598
 MeshCollider:
   m_ObjectHideFlags: 0
@@ -10828,10 +10811,7 @@ MonoBehaviour:
   _nodes:
   - {fileID: 993911434}
   - {fileID: 1792262597}
-  - {fileID: 171357550}
-  - {fileID: 742549474}
-  - {fileID: 1178684554}
-  _costs: 0a0000000a0000000e0000000a0000000e000000
+  _costs: 0a0000000a000000
 --- !u!64 &1966184347
 MeshCollider:
   m_ObjectHideFlags: 0

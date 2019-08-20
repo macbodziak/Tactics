@@ -4,11 +4,16 @@ using UnityEngine;
 
 public class Main : MonoBehaviour
 {
+    [SerializeField] Graph graph;
+    [SerializeField] Node start;
+    [SerializeField] Node goal;
+
+    [SerializeField] int range;
     // Start is called before the first frame update
     void Start()
     {
-        // Graph.CreateNewGraph(15, 15);
-        // Graph.LoadGraphFromFile("map01.txt");
+        Dictionary<Node, Node> area = Pathfinder.FindWalkableArea(graph, start, range);
+        Pathfinder.DrawDebugArea(area,100f);
     }
 
     // Update is called once per frame
