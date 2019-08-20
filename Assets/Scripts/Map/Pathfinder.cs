@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+
 public class Pathfinder
 {
-    class NodePathData
+    public class NodePathData
     {
         public Node cameFrom = null;
         public int costSoFar = 0;
@@ -52,22 +54,18 @@ public class Pathfinder
         return path;
     }
 
-    static public Dictionary<Node, Node> FindWalkableArea(Graph g, Node start, int range)
+    static public Dictionary<Node, NodePathData> FindWalkableArea(Graph g, Node start, int range)
     {
         PriorityQueue<Node> frontier = new PriorityQueue<Node>();
-        Dictionary<Node, int> costSoFar = new Dictionary<Node, int>();
-        Dictionary<Node, Node> cameFrom = new Dictionary<Node, Node>();
-        // Dictionary<Node, NodePathData> nodeData = new Dictionary<Node, NodePathData>();
+        Dictionary<Node, NodePathData> nodeData = new Dictionary<Node, NodePathData>();
 
         Node currentNode;
-        // NodePathData currentNodePathData;
+        NodePathData currentNodePathData;
         frontier.Push(start, 0);
-        cameFrom.Add(start, null);
-        costSoFar.Add(start, 0);
-        // currentNodePathData = new NodePathData();
-        // currentNodePathData.cameFrom = null;
-        // currentNodePathData.costSoFar = 0;
-        // nodeData.Add(start, currentNodePathData);
+        currentNodePathData = new NodePathData();
+        currentNodePathData.cameFrom = null;
+        currentNodePathData.costSoFar = 0;
+        nodeData.Add(start, currentNodePathData);
 
         while (frontier.Count > 0)
         {
@@ -76,21 +74,23 @@ public class Pathfinder
             foreach (Edge edge in currentNode.edges)
             {
                 Node nextNode = edge.node;
-                int newCost = costSoFar[currentNode] + edge.cost;
+                int newCost = nodeData[currentNode].costSoFar + edge.cost;
                 if (newCost > range)
                 {
                     continue;
                 }
-                if (!costSoFar.ContainsKey(nextNode) || costSoFar[nextNode] > newCost)
+                if (!nodeData.ContainsKey(nextNode) || nodeData[nextNode].costSoFar > newCost)
                 {
-                    costSoFar[nextNode] = newCost;
+                    currentNodePathData = new NodePathData();
+                    currentNodePathData.cameFrom = currentNode;
+                    currentNodePathData.costSoFar = newCost;
+                    nodeData[nextNode] = currentNodePathData;
                     frontier.Push(nextNode, newCost);
-                    cameFrom[nextNode] = currentNode;
                 }
             }
         }
-        cameFrom.Remove(start);
-        return cameFrom;
+        nodeData.Remove(start);
+        return nodeData;
     }
 
     static public void DrawDebugPath(List<Node> path, float duration = 5.0f)
@@ -105,14 +105,14 @@ public class Pathfinder
         }
     }
 
-    static public void DrawDebugArea(Dictionary<Node, Node> nodeSet, float duration = 5.0f)
+    static public void DrawDebugArea(Dictionary<Node, NodePathData> nodeSet, float duration = 5.0f)
     {
         Renderer rd;
         foreach (var item in nodeSet)
         {
             if (item.Value != null)
             {
-                Debug.DrawLine(item.Key.transform.position, item.Value.transform.position, Color.magenta, duration);
+                Debug.DrawLine(item.Key.transform.position, item.Value.cameFrom.transform.position, Color.magenta, duration);
                 rd = item.Key.transform.gameObject.GetComponent<Renderer>();
                 rd.material.color = Color.blue;
             }
