@@ -56,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Editor\GraphEditor.cs" />
+     <Compile Include="Assets\Editor\NodeEditor.cs" />
  <Reference Include="UnityEditor.TestRunner">
  <HintPath>F:/Unity/Tactics 01/Library/ScriptAssemblies/UnityEditor.TestRunner.dll</HintPath>
  </Reference>

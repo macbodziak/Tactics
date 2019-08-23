@@ -55,7 +55,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\Main.cs" />
+     <Compile Include="Assets\Scripts\Character.cs" />
+     <Compile Include="Assets\Scripts\Command\CommandQueue.cs" />
+     <Compile Include="Assets\Scripts\Command\CommandQueueListener.cs" />
+     <Compile Include="Assets\Scripts\Command\ICommand.cs" />
+     <Compile Include="Assets\Scripts\Command\MoveCharacterCommand.cs" />
+     <Compile Include="Assets\Scripts\GameController.cs" />
      <Compile Include="Assets\Scripts\Map\Edge.cs" />
      <Compile Include="Assets\Scripts\Map\Graph.cs" />
      <Compile Include="Assets\Scripts\Map\Node.cs" />

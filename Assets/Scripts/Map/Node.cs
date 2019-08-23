@@ -4,15 +4,106 @@ using UnityEngine;
 
 public class Node : MonoBehaviour, ISerializationCallbackReceiver
 {
-    [SerializeField]
-    bool myWalkable = true;
+    [SerializeField] bool myWalkable = true;
     //other things
     public List<Edge> edges = new List<Edge>();
 
+    [SerializeField] Graph paretGraph = null;
+    [SerializeField] int _x;
+    [SerializeField] int _y;
+
+    [SerializeField] Character myCharacter = null;
     //used for serialization for the editor
-    public List<Node> _nodes = new List<Node>();
+    [SerializeField]  List<Node> _nodes = new List<Node>();
     //used for serialization for the editor
-    public List<int> _costs = new List<int>();
+    [SerializeField]  List<int> _costs = new List<int>();
+
+    static Texture2D texture;
+
+    public Character character
+    {
+        get
+        {
+            return myCharacter;
+        }
+
+        set
+        {
+            myCharacter = value;
+            if (myCharacter == null)
+            {
+                walkable = true;
+            }
+            else
+            {
+                myCharacter.node = this;
+                walkable = false;
+            }
+        }
+    }
+
+
+    public bool walkable
+    {
+        get
+        {
+            return myWalkable;
+        }
+
+        set
+        {
+            myWalkable = value;
+            if (myWalkable == true)
+            {
+                tag = "WalkableNode";
+            }
+            else
+            {
+                tag = "NotWalkableNode";
+            }
+            Graph.instance.RebakeNode(this);
+        }
+    }
+
+    public int x
+    {
+        get
+        {
+            return _x;
+        }
+    }
+
+    public int y
+    {
+        get
+        {
+            return _y;
+        }
+    }
+    private void Awake()
+    {
+        //init highlight texture
+        texture = Resources.Load<Texture2D>("Textures/walkableTile") as Texture2D;
+        GetComponent<Renderer>().material.SetTexture("_DetailAlbedoMap", texture);
+
+        if (myWalkable == true)
+        {
+            tag = "WalkableNode";
+        }
+        else
+        {
+            tag = "NotWalkableNode";
+        }
+
+    }
+
+    public void Init(Vector3 pos, int x, int y, string name)
+    {
+        transform.position = pos;
+        gameObject.name = name;
+        _x = x;
+        _y = y;
+    }
 
     public void OnBeforeSerialize()
     {
@@ -35,19 +126,6 @@ public class Node : MonoBehaviour, ISerializationCallbackReceiver
         }
     }
 
-    public bool walkable
-    {
-        get
-        {
-            return myWalkable;
-        }
-
-        set
-        {
-            myWalkable = value;
-        }
-    }
-
     public void ToogleWalkable()
     {
         walkable = !walkable;
@@ -64,16 +142,26 @@ public class Node : MonoBehaviour, ISerializationCallbackReceiver
     }
     public void DrawDebugEdges()
     {
-        // Debug.Log("edge count : " + edges.Count);
         foreach (Edge edge in edges)
         {
             if (edge.node == null)
             {
                 Debug.Log("edge.node == null");
             }
-
-            Debug.DrawLine(transform.position, edge.node.transform.position, Color.green, 2.0f);
-            // Debug.Log("drawing line : " + transform.position + " - " + edge.node.transform.position);
+            Vector3 vec = edge.node.transform.position - transform.position;
+            vec *= 0.5f;
+            vec += transform.position;
+            Debug.DrawLine(transform.position, vec, Color.green, 2.0f);
         }
+    }
+
+    public void Highlight()
+    {
+        GetComponent<Renderer>().material.EnableKeyword("_DETAIL_MULX2");
+    }
+
+    public void UnHighlight()
+    {
+        GetComponent<Renderer>().material.DisableKeyword("_DETAIL_MULX2");
     }
 }

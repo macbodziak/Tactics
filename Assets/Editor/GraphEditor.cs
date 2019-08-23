@@ -22,7 +22,6 @@ public class GraphEditor : Editor
     public override void OnInspectorGUI()
     {
         Graph myGraph = (Graph)target;
-        // DrawDefaultInspector();
         GUI.enabled = myGraph.isEmpty;
         graphWidth = EditorGUILayout.IntField("Width: ", graphWidth);
         graphWidth = Mathf.Clamp(graphWidth, 0, maxGridSize);
@@ -57,7 +56,5 @@ public class GraphEditor : Editor
             isCreated = false;
             Debug.Log("Deleting Graph");
         }
-
-        
     }
 }

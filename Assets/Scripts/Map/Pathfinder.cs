@@ -51,6 +51,7 @@ public class Pathfinder
                 }
             }
         }
+        path.Reverse();
         return path;
     }
 
@@ -93,6 +94,22 @@ public class Pathfinder
         return nodeData;
     }
 
+    static public List<Node> GetPathFromArea(Dictionary<Node, NodePathData> area, Node destination)
+    {
+        List<Node> path = new List<Node>();
+        if(!area.ContainsKey(destination))
+        {
+            return path;
+        }
+        Node nextNode = destination;
+        while (area.ContainsKey(nextNode))
+        {
+            path.Add(nextNode);
+            nextNode = area[nextNode].cameFrom;
+        }
+        path.Reverse();
+        return path;
+    }
     static public void DrawDebugPath(List<Node> path, float duration = 5.0f)
     {
         if (path.Count <= 1)
@@ -107,14 +124,11 @@ public class Pathfinder
 
     static public void DrawDebugArea(Dictionary<Node, NodePathData> nodeSet, float duration = 5.0f)
     {
-        Renderer rd;
         foreach (var item in nodeSet)
         {
             if (item.Value != null)
             {
                 Debug.DrawLine(item.Key.transform.position, item.Value.cameFrom.transform.position, Color.magenta, duration);
-                rd = item.Key.transform.gameObject.GetComponent<Renderer>();
-                rd.material.color = Color.blue;
             }
         }
     }

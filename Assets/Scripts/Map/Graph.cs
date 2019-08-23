@@ -5,6 +5,7 @@ using System.IO;
 
 public class Graph : MonoBehaviour, ISerializationCallbackReceiver
 {
+    private static Graph myInstance;
     public int width;
     public int height;
     public bool isEmpty = false;
@@ -13,6 +14,24 @@ public class Graph : MonoBehaviour, ISerializationCallbackReceiver
 
     static Vector2Int[] Dir = { Vector2Int.down, new Vector2Int(1, -1), Vector2Int.right, new Vector2Int(1, 1), Vector2Int.up, new Vector2Int(-1, 1), Vector2Int.left, new Vector2Int(-1, -1) };
     static int[] DirCost = { 10, 14, 10, 14, 10, 14, 10, 14 };
+
+    static public Graph instance
+    {
+        get
+        {
+            return myInstance;
+        }
+    }
+
+    private void Awake()
+    {
+        if (myInstance != null && myInstance != this)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+        myInstance = this;
+    }
 
     public void InitGraph(int width, int height)
     {
@@ -25,8 +44,7 @@ public class Graph : MonoBehaviour, ISerializationCallbackReceiver
             {
                 Node no = GameObject.Instantiate(Resources.Load("Prefabs/Tile", typeof(Node)), transform) as Node;
                 Vector3 pos = new Vector3(x, 0f, y);
-                no.transform.position = pos;
-                no.name = "Tile " + x + "," + y;
+                no.Init(pos,x, y,"Tile " + x + "," + y);
                 nodes[x, y] = no;
             }
         }
@@ -45,18 +63,34 @@ public class Graph : MonoBehaviour, ISerializationCallbackReceiver
         }
     }
 
-    void SetUpNeighboursPerNode(Vector2Int location)
+    public void SetUpNeighboursPerNode(Vector2Int location)
     {
         Node currentNode = nodes[location.x, location.y];
-        if (currentNode.walkable == false)
-        {
-            return;
-        }
+        currentNode.edges.Clear();
+        // if (currentNode.walkable == false)
+        // {
+        //     return;
+        // }
 
         for (int i = 0; i < 8; i++)
         {
             SetUpEdgePerDirection(location, i);
 
+        }
+    }
+
+    public void SetUpNeighboursPerNode(Node currentNode)
+    {
+        currentNode.edges.Clear();
+        Vector2Int location = new Vector2Int(currentNode.x, currentNode.y);
+        // if (currentNode.walkable == false)
+        // {   
+        //     return;
+        // }
+
+        for (int i = 0; i < 8; i++)
+        {
+            SetUpEdgePerDirection(location, i);
         }
     }
 
@@ -122,6 +156,24 @@ public class Graph : MonoBehaviour, ISerializationCallbackReceiver
         }
         return false;
     }
+
+    public void RebakeNode(Node currentNode)
+    {
+        int nextX;
+        int nextY;
+
+        for (int i = 0; i < 8; i++)
+        {
+            nextX = currentNode.x + Dir[i].x;
+            nextY = currentNode.y + Dir[i].y;
+            if (IsInGraphRange(nextX, nextY))
+            {
+                SetUpNeighboursPerNode(nodes[nextX, nextY]);
+            }
+        }
+        SetUpNeighboursPerNode(currentNode);
+    }
+
     bool IsInGraphRange(int x, int y)
     {
         if (x < 0 || x >= width || y < 0 || y >= height)
@@ -176,31 +228,55 @@ public class Graph : MonoBehaviour, ISerializationCallbackReceiver
             }
         }
     }
-    // static public Graph LoadGraphFromFile(string Filename)
-    // {
-    //     TextAsset textFile = Resources.Load(Filename) as TextAsset;
-    //     if (textFile != null)
-    //     {
-    //         Debug.Log(Filename + " exists!");
-    //         string text = textFile.text;
-    //         char[] seperator = { ' ', '\n' };
-    //         string[] words = text.Split(seperator);
-    //         if (words.Length < 2)
-    //         {
-    //             Debug.Log(Filename + " has incorrect data, too short");
-    //             return null;
-    //         }
-    //         int w = int.Parse(words[0]);
-    //         int h = int.Parse(words[1]);
-    //         Graph graph = new Graph(w, h);
 
-    //         return null;
-    //     }
-    //     else
-    //     {
-    //         Debug.Log(Filename + " does not exist :(");
-    //         return null;
-    //     }
+    static public void DrawDebugArea(Dictionary<Node, Pathfinder.NodePathData> nodeSet, float duration = 5.0f)
+    {
+        foreach (var item in nodeSet)
+        {
+            if (item.Value != null)
+            {
+                Debug.DrawLine(item.Key.transform.position, item.Value.cameFrom.transform.position, Color.magenta, duration);
+            }
+        }
+    }
 
-    // }
+    static public void HighlightArea(Dictionary<Node, Pathfinder.NodePathData> nodeSet)
+    {
+        foreach (var item in nodeSet)
+        {
+            item.Key.Highlight();
+            if (item.Value != null)
+            {
+                // Debug.DrawLine(item.Key.transform.position, item.Value.cameFrom.transform.position, Color.magenta, 2f);
+            }
+        }
+    }
+
+    static public void UnHighlightArea(Dictionary<Node, Pathfinder.NodePathData> nodeSet)
+    {
+        foreach (var item in nodeSet)
+        {
+            item.Key.UnHighlight();
+        }
+    }
+
+    static public void DrawDebugPath(List<Node> path, float duration = 5.0f)
+    {
+        if (path.Count <= 1)
+        {
+            Debug.Log("Empty Path");
+        }
+        for (int i = 1; i < path.Count; i++)
+        {
+            Debug.DrawLine(path[i - 1].transform.position, path[i].transform.position, Color.red, duration);
+        }
+    }
+
+    static public void DrawDebugGraph(Graph gr, float duration = 5.0f)
+    {
+        foreach (Node node in gr.nodes)
+        {
+            node.DrawDebugEdges();
+        }
+    }
 }
