@@ -4,7 +4,10 @@ using UnityEngine;
 
 public class CameraController : MonoBehaviour
 {
-    [SerializeField] float distance = 20.0f;
+    [SerializeField] [Tooltip("The distance of the camera from the terrain Point at Start of game")]
+     float distance = 20.0f;
+    [SerializeField] [Tooltip("The angle of the camera to the terrain at Start of game")] 
+    float cameraAngle = 50.0f;
     [SerializeField] float speed = 1.0f;
     [SerializeField] float rotationSpeed = 1.0f;
     [SerializeField] float zoomSpeed = 1.0f;
@@ -146,7 +149,7 @@ public class CameraController : MonoBehaviour
 
     void SetUpStartPosition()
     {
-        float camAngle = 50f * Mathf.Deg2Rad;
+        float camAngle = cameraAngle * Mathf.Deg2Rad;
         float z = -distance * Mathf.Cos(camAngle);
         float y = distance * Mathf.Sin(camAngle);
         Debug.Log("Mathf.Sin(camAngle) " + Mathf.Sin(camAngle));
@@ -155,23 +158,27 @@ public class CameraController : MonoBehaviour
         cam.transform.localPosition = new Vector3(x, y, z);
     }
 
+
+
     void ZoomIn()
     {
-        Vector3 newPos = cam.transform.position + cam.transform.forward.normalized * zoomSpeed * Time.deltaTime;
-        float dist = Vector3.Distance(transform.position, newPos);
-        if (dist > zoomMin)
-        {
-            cam.transform.position = newPos;
-        }
+        Vector3 MinPoint = transform.position - cam.transform.forward.normalized * zoomMin;
+        cam.transform.position = Vector3.MoveTowards(cam.transform.position, MinPoint, zoomSpeed * Time.deltaTime);
+
+        float dist = Vector3.Distance(transform.position, cam.transform.position);
+        Debug.Log("distance: " + dist);
+        // if (dist > zoomMin)
+        // {
+        //     cam.transform.position = newPos;
+        // }
     }
 
     void ZoomOut()
     {
-        Vector3 newPos = cam.transform.position - cam.transform.forward.normalized * zoomSpeed * Time.deltaTime;
-        float dist = Vector3.Distance(transform.position, newPos);
-        if (dist < zoomMax)
-        {
-            cam.transform.position = newPos;
-        }
+        Vector3 MaxPoint = transform.position - cam.transform.forward.normalized * zoomMax;
+        cam.transform.position = Vector3.MoveTowards(cam.transform.position, MaxPoint, zoomSpeed * Time.deltaTime);
+        
+        float dist = Vector3.Distance(transform.position, cam.transform.position);
+        Debug.Log("distance: " + dist);
     }
 }

@@ -51209,7 +51209,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0.5, y: 0, z: 0, w: 0.8660254}
-  m_LocalPosition: {x: 0, y: 25, z: 0}
+  m_LocalPosition: {x: 0, y: 19.318516, z: -5.1763816}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1331209681}
@@ -70198,9 +70198,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   distance: 20
+  cameraAngle: 75
   speed: 40
   rotationSpeed: 135
   zoomSpeed: 12
+  zoomMin: 10
+  zoomMax: 22
   cam: {fileID: 963194227}
 --- !u!1 &1337322505
 GameObject:
