@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Assertions;
 using UnityEngine.Profiling;
 
 public class GameController : MonoBehaviour, ICommandQueueListener
@@ -29,15 +30,16 @@ public class GameController : MonoBehaviour, ICommandQueueListener
             Destroy(this.gameObject);
             return;
         }
-
+        
         myInstance = this;
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        Assert.IsNotNull(Graph.instance);
         commands.RegisterListener(this);
-        Graph.DrawDebugGraph(graph);
+        Graph.DrawDebugGraph(Graph.instance);
     }
 
     // Update is called once per frame
@@ -62,7 +64,7 @@ public class GameController : MonoBehaviour, ICommandQueueListener
         selectedChar = go.GetComponentInParent<Character>();
         if (selectedChar != null)
         {
-            area = Pathfinder.FindWalkableArea(graph, selectedChar.node, selectedChar.range);
+            area = Pathfinder.FindWalkableArea(Graph.instance, selectedChar.node, selectedChar.range);
             Graph.HighlightArea(area);
         }
     }
@@ -144,7 +146,7 @@ public class GameController : MonoBehaviour, ICommandQueueListener
     {
         if (Input.GetKeyDown(KeyCode.G))
         {
-            Graph.DrawDebugGraph(graph);
+            Graph.DrawDebugGraph(Graph.instance);
         }
     }
 }

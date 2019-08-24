@@ -45,9 +45,9 @@ public class GraphEditor : Editor
             EditorSceneManager.MarkSceneDirty(EditorSceneManager.GetActiveScene());
             Debug.Log("Rebaking Graph");
         }
-        if (GUILayout.Button("Placeholder Button"))
+        if (GUILayout.Button("Show Debug Edges"))
         {
-            Debug.Log("Placeholder Button Pressed - not yet implemented");
+            Graph.DrawDebugGraph(myGraph);
         }
         if (GUILayout.Button("Delete Graph Button"))
         {

@@ -26,13 +26,9 @@ public class NodeEditor : Editor
         EditorGUILayout.LabelField("Position", x.intValue + "," + y.intValue);
         //in the future - rebake on change
         walkable.boolValue = EditorGUILayout.Toggle("Walkable", walkable.boolValue);
-        character.objectReferenceValue = EditorGUILayout.ObjectField("Character", character.objectReferenceValue, typeof(Character), true);
-        // if (character.objectReferenceValue != null)
-        //     EditorGUILayout.LabelField("Character", character.objectReferenceValue.name);
-        // else
-        // {
-        //     EditorGUILayout.LabelField("Character", "null");
-        // }
+
+        HandleCharacterProperty();
+
         if (Selection.objects.Length == 1)
         {
             printEdges();
@@ -69,6 +65,26 @@ public class NodeEditor : Editor
                 nodes.Next(false);
                 costs.Next(false);
             }
+        }
+    }
+
+    void HandleCharacterProperty()
+    {
+        character.objectReferenceValue = EditorGUILayout.ObjectField("Character", character.objectReferenceValue, typeof(Character), true);
+        if (character.objectReferenceValue != null)
+        {
+            GUIContent content = new GUIContent("Update Character Reference", "Update The Node Refernece in this Character so it points to this Node");
+
+            if (GUILayout.Button(content))
+            {
+                SerializedObject charSo = new SerializedObject(character.objectReferenceValue);
+                
+                charSo.FindProperty("_node").objectReferenceValue = serializedObject.targetObject;
+                Character charObj = (Character)charSo.targetObject;
+                charObj.transform.position = ((Node)target).transform.position;
+                charSo.ApplyModifiedProperties();
+            }
+            // EditorGUILayout.LabelField("Character", character.objectReferenceValue.name);
         }
     }
 }

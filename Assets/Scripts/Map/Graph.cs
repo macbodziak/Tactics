@@ -6,9 +6,10 @@ using System.IO;
 public class Graph : MonoBehaviour, ISerializationCallbackReceiver
 {
     private static Graph myInstance;
-    public int width;
-    public int height;
-    public bool isEmpty = false;
+    [SerializeField] public int width;
+    [SerializeField] public int height;
+    [SerializeField] public bool isEmpty = true;
+    [SerializeField] public float nodeInterval = 1.0f;
     Node[,] nodes;
     [SerializeField] List<Node> serializedNodes;
 
@@ -44,7 +45,7 @@ public class Graph : MonoBehaviour, ISerializationCallbackReceiver
             {
                 Node no = GameObject.Instantiate(Resources.Load("Prefabs/Tile", typeof(Node)), transform) as Node;
                 Vector3 pos = new Vector3(x, 0f, y);
-                no.Init(pos,x, y,"Tile " + x + "," + y);
+                no.Init(pos, x, y, "Tile " + x + "," + y);
                 nodes[x, y] = no;
             }
         }
@@ -53,6 +54,10 @@ public class Graph : MonoBehaviour, ISerializationCallbackReceiver
     public void CreateNewGraph(int inWidth, int inHeight)
     {
         isEmpty = false;
+        if (serializedNodes == null)
+        {
+            serializedNodes = new List<Node>();
+        }
         InitGraph(inWidth, inHeight);
         for (int x = 0; x < width; x++)
         {
@@ -196,8 +201,10 @@ public class Graph : MonoBehaviour, ISerializationCallbackReceiver
     }
     public void OnBeforeSerialize()
     {
-        serializedNodes.Clear();
-
+        if (serializedNodes != null)
+        {
+            serializedNodes.Clear();
+        }
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
