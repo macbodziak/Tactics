@@ -43,10 +43,11 @@ public class NodeEditor : Editor
         SerializedProperty nodes = serializedObject.FindProperty("_nodes");
         SerializedProperty costs = serializedObject.FindProperty("_costs");
 
-        if (!nodes.isArray || !costs.isArray)
+        if (!nodes.isArray || !costs.isArray || nodes.arraySize == 0)
         {
             return;
         }
+        
         nodes.Next(true);
         nodes.Next(true);
         costs.Next(true);

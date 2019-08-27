@@ -13,7 +13,9 @@ public class Node : MonoBehaviour, ISerializationCallbackReceiver
     [SerializeField] int _y;
 
     [SerializeField] Character myCharacter = null;
+    #if UNITY_EDITOR
     //used for serialization for the editor
+    #endif
     [SerializeField]  List<Node> _nodes = new List<Node>();
     //used for serialization for the editor
     [SerializeField]  List<int> _costs = new List<int>();
@@ -97,12 +99,13 @@ public class Node : MonoBehaviour, ISerializationCallbackReceiver
 
     }
 
-    public void Init(Vector3 pos, int x, int y, string name)
+    public void Init(Vector3 pos, int x, int y, string name, bool isWalkable)
     {
         transform.position = pos;
         gameObject.name = name;
         _x = x;
         _y = y;
+        myWalkable = isWalkable;
     }
 
     public void OnBeforeSerialize()
@@ -154,6 +157,23 @@ public class Node : MonoBehaviour, ISerializationCallbackReceiver
             Debug.DrawLine(transform.position, vec, Color.green, 2.0f);
         }
     }
+
+    #if UNITY_EDITOR    
+    public void DrawDebugEdgesInEditor()
+    {
+        foreach (Edge edge in edges)
+        {
+            if (edge.node == null)
+            {
+                Debug.Log("edge.node == null");
+            }
+            Vector3 vec = edge.node.transform.position - transform.position;
+            vec *= 0.5f;
+            vec += transform.position;
+            UnityEditor.Handles.DrawLine(transform.position, vec);
+        }
+    }
+    #endif
 
     public void Highlight()
     {

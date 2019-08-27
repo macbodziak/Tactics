@@ -11,6 +11,10 @@ public class Graph : MonoBehaviour, ISerializationCallbackReceiver
     [SerializeField] public bool isEmpty = true;
     [SerializeField] public float nodeInterval = 1.0f;
     Node[,] nodes;
+
+#if UNITY_EDITOR
+    public bool showDebugEdges = false;
+#endif
     [SerializeField] List<Node> serializedNodes;
 
     static Vector2Int[] Dir = { Vector2Int.down, new Vector2Int(1, -1), Vector2Int.right, new Vector2Int(1, 1), Vector2Int.up, new Vector2Int(-1, 1), Vector2Int.left, new Vector2Int(-1, -1) };
@@ -45,7 +49,7 @@ public class Graph : MonoBehaviour, ISerializationCallbackReceiver
             {
                 Node no = GameObject.Instantiate(Resources.Load("Prefabs/Tile", typeof(Node)), transform) as Node;
                 Vector3 pos = new Vector3(x, 0f, y);
-                no.Init(pos, x, y, "Tile " + x + "," + y);
+                no.Init(pos, x, y, "Tile " + x + "," + y, true);
                 nodes[x, y] = no;
             }
         }
@@ -68,14 +72,59 @@ public class Graph : MonoBehaviour, ISerializationCallbackReceiver
         }
     }
 
+    public void CreateNewGraphFromTexture(Texture2D tex)
+    {
+        
+        if(tex == null)
+        {
+            Debug.Log("Error: texture = null");
+            return;
+        }
+
+        isEmpty = false;
+        if (serializedNodes == null)
+        {
+            serializedNodes = new List<Node>();
+        }
+        InitGraphFromTexture(tex);
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                SetUpNeighboursPerNode(new Vector2Int(x, y));
+            }
+        }
+    }
+
+    public void InitGraphFromTexture(Texture2D tex)
+    {
+
+        this.width = tex.width;
+        this.height = tex.height;
+        nodes = new Node[width, height];
+        bool isWalkable = true;
+
+        for (int x = 0; x < width; x++)
+        {
+            for (int y = 0; y < height; y++)
+            {
+                isWalkable = tex.GetPixel(x,y) == Color.white;
+                Node no = GameObject.Instantiate(Resources.Load("Prefabs/Tile", typeof(Node)), transform) as Node;
+                Vector3 pos = new Vector3(x, 0f, y);
+                no.Init(pos, x, y, "Tile " + x + "," + y, isWalkable);
+                Material mat = no.GetComponent<Renderer>().material;
+                mat.color = Color.red;
+                no.GetComponent<Renderer>().material = mat;
+                
+                nodes[x, y] = no;
+            }
+        }
+    }
+
     public void SetUpNeighboursPerNode(Vector2Int location)
     {
         Node currentNode = nodes[location.x, location.y];
         currentNode.edges.Clear();
-        // if (currentNode.walkable == false)
-        // {
-        //     return;
-        // }
 
         for (int i = 0; i < 8; i++)
         {
@@ -214,15 +263,18 @@ public class Graph : MonoBehaviour, ISerializationCallbackReceiver
         }
     }
 
+#if UNITY_EDITOR
     public void DeleteGraph()
     {
         isEmpty = true;
         for (int i = 0; i < serializedNodes.Count; i++)
         {
-            DestroyImmediate(serializedNodes[i].gameObject);
+            UnityEditor.Undo.DestroyObjectImmediate(serializedNodes[i].gameObject);
         }
+        UnityEditor.Undo.undoRedoPerformed += Rebake;
         serializedNodes.Clear();
     }
+#endif
 
     public void Rebake()
     {
@@ -286,4 +338,14 @@ public class Graph : MonoBehaviour, ISerializationCallbackReceiver
             node.DrawDebugEdges();
         }
     }
+
+#if UNITY_EDITOR
+    static public void DrawDebugGraphInEditor(Graph gr, float duration = 5.0f)
+    {
+        foreach (Node node in gr.nodes)
+        {
+            node.DrawDebugEdgesInEditor();
+        }
+    }
+#endif
 }

@@ -20,6 +20,12 @@ public class MoveCharacterCommand : ICommand
         this.path = path;
         nodeCount = path.Count;
         parent = commandQueue;
+
+        // update rotation
+        if (path != null && nodeCount >= 1)
+        {
+            character.transform.LookAt(path[1].transform.position);
+        }
     }
 
     public void Update()
@@ -29,11 +35,15 @@ public class MoveCharacterCommand : ICommand
             isFinished = true;
             parent.NextCommand();
         }
+        character.AnimStartRunning();
+
+
 
         if (character.transform.position != path[nodeCount - 1].transform.position)
         {
             distanceThisFrame = character.speed * Time.deltaTime;
             distanceToNextNode = Vector3.Distance(character.transform.position, path[i].transform.position);
+
 
             character.transform.position = Vector3.MoveTowards(character.transform.position, path[i].transform.position, distanceThisFrame);
 
@@ -45,6 +55,7 @@ public class MoveCharacterCommand : ICommand
                 {
                     break;
                 }
+                character.transform.LookAt(path[i].transform.position);
                 distanceToNextNode = Vector3.Distance(character.transform.position, path[i].transform.position);
                 character.transform.position = Vector3.MoveTowards(character.transform.position, path[i].transform.position, distanceThisFrame);
             }
@@ -52,9 +63,9 @@ public class MoveCharacterCommand : ICommand
         else
         {
             character.node.character = null;
-            // character.node = path[path.Count - 1];
             path[path.Count - 1].character = character;
             isFinished = true;
+            character.AnimStopRunning();
             parent.NextCommand();
         }
     }
