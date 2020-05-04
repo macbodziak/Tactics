@@ -7,7 +7,7 @@ public class Character : MonoBehaviour
 {
     [SerializeField] public float speed;
     [SerializeField] Node _node;
-    bool hasCover = false;
+    bool _hasCover = false;
 
     Animator animator;
 
@@ -23,6 +23,19 @@ public class Character : MonoBehaviour
         set
         {
             _node = value;
+        }
+    }
+
+    public bool hasCover
+    {
+        get
+        {
+            return _hasCover;
+        }
+        set
+        {
+            _hasCover = value;
+            animator.SetBool("HasCover", _hasCover);
         }
     }
 
@@ -50,4 +63,9 @@ public class Character : MonoBehaviour
         animator.SetBool("IsRunning", false);
     }
 
+    public bool CheckCover()
+    {
+        hasCover = Graph.instance.CheckCover(new Vector2Int(node.x, node.y));
+        return hasCover;
+    }
 }

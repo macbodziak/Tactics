@@ -39,7 +39,6 @@ public class GameController : MonoBehaviour, ICommandQueueListener
     {
         Assert.IsNotNull(Graph.instance);
         commands.RegisterListener(this);
-        Graph.DrawDebugGraph(Graph.instance);
     }
 
     // Update is called once per frame
@@ -89,7 +88,6 @@ public class GameController : MonoBehaviour, ICommandQueueListener
             {
                 Graph.UnHighlightArea(area);
                 List<Node> path = Pathfinder.GetPathFromArea(area, node);
-                // Graph.DrawDebugPath(path);
                 commands.Push(new MoveCharacterCommand(commands, selectedChar, path));
                 area.Clear();
                 commands.Execute();
@@ -124,7 +122,6 @@ public class GameController : MonoBehaviour, ICommandQueueListener
             {
                 if (hit.transform != null)
                 {
-                    Debug.Log("Clicked on: " + hit.transform.name + " tag: " + hit.transform.tag);
                     switch (hit.transform.tag)
                     {
                         case "Character":

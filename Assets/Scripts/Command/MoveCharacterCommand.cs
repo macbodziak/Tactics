@@ -24,7 +24,7 @@ public class MoveCharacterCommand : ICommand
         // update rotation
         if (path != null && nodeCount >= 1)
         {
-            character.transform.LookAt(path[1].transform.position);
+            character.transform.LookAt(path[0].transform.position);
         }
     }
 
@@ -36,8 +36,7 @@ public class MoveCharacterCommand : ICommand
             parent.NextCommand();
         }
         character.AnimStartRunning();
-
-
+        character.hasCover = false;
 
         if (character.transform.position != path[nodeCount - 1].transform.position)
         {
@@ -66,6 +65,7 @@ public class MoveCharacterCommand : ICommand
             path[path.Count - 1].character = character;
             isFinished = true;
             character.AnimStopRunning();
+            character.hasCover = Graph.instance.CheckCover(path[path.Count - 1]);
             parent.NextCommand();
         }
     }

@@ -74,8 +74,8 @@ public class Graph : MonoBehaviour, ISerializationCallbackReceiver
 
     public void CreateNewGraphFromTexture(Texture2D tex)
     {
-        
-        if(tex == null)
+
+        if (tex == null)
         {
             Debug.Log("Error: texture = null");
             return;
@@ -108,14 +108,13 @@ public class Graph : MonoBehaviour, ISerializationCallbackReceiver
         {
             for (int y = 0; y < height; y++)
             {
-                isWalkable = tex.GetPixel(x,y) == Color.white;
+                isWalkable = tex.GetPixel(x, y) == Color.white;
                 Node no = GameObject.Instantiate(Resources.Load("Prefabs/Tile", typeof(Node)), transform) as Node;
                 Vector3 pos = new Vector3(x, 0f, y);
                 no.Init(pos, x, y, "Tile " + x + "," + y, isWalkable);
                 Material mat = no.GetComponent<Renderer>().material;
                 mat.color = Color.red;
                 no.GetComponent<Renderer>().material = mat;
-                
                 nodes[x, y] = no;
             }
         }
@@ -337,6 +336,44 @@ public class Graph : MonoBehaviour, ISerializationCallbackReceiver
         {
             node.DrawDebugEdges();
         }
+    }
+
+    public bool CheckCover(Vector2Int location)
+    {
+        Node currentNode = nodes[location.x, location.y];
+
+        int x;
+        int y;
+
+        for (int i = 0; i < 8; i++)
+        {
+            x = Dir[i].x + location.x;
+            y = Dir[i].y + location.y;
+            //in the future, not walkable but cover!!!
+            if(IsInGraphRange(x, y) && nodes[x,y].walkable == false)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public bool CheckCover(Node node)
+    {
+        int x;
+        int y;
+
+        for (int i = 0; i < 8; i++)
+        {
+            x = Dir[i].x + node.x;
+            y = Dir[i].y + node.y;
+            //in the future, not walkable but cover!!!
+            if(IsInGraphRange(x, y) && nodes[x,y].walkable == false)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
 #if UNITY_EDITOR
